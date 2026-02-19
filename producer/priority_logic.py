@@ -1,18 +1,18 @@
-from redis_connection import r,r1
+from redis_connection import urgent_queue,normal_queue
+from models import Alert
 import json
 
 
 
 def send_to_redis(alert):
     priority = alert["priority"]
-    key = alert["timestamp"] # im using the timestamp as key since its the most unique value on the alert right now
     
-    alert = json.dumps(alert) 
+    alert = json.dumps(alert)
     if priority == "URGENT":
-        r.set(key,alert) 
-        
+        urgent_queue.set(priority,alert) 
+
     elif priority == "NORMAL":
-        r1.set(key,alert)
+        normal_queue.set(priority,alert)
 
 
 def priority_check(alert):
@@ -53,11 +53,14 @@ def producer():
     with open("border_alerts.json", "r", encoding="utf-8") as f:
                 alerts = json.load(f)
     for alert in alerts:
+        # alert = Alert(alert) # validation
         alert = priority_check(alert)
-        return send_to_redis(alert)
+        send_to_redis(alert)
          
 
     
 
 
 producer()
+
+
