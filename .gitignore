@@ -1,0 +1,7 @@
+__pycache__/
+\__pycache__/
+__pycache__/
+
+close = 300
+medium = 300-800
+far = 800-1500
