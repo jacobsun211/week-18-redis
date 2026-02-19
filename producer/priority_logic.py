@@ -1,4 +1,4 @@
-from redis_connection import r,r1
+from redis_connection import urgent_queue,normal_queue
 from models import Alert
 import json
 
@@ -7,12 +7,12 @@ import json
 def send_to_redis(alert):
     priority = alert["priority"]
     
-    alert = json.dumps(alert) 
+    alert = json.dumps(alert)
     if priority == "URGENT":
-        r.set(priority,alert) 
+        urgent_queue.set(priority,alert) 
 
     elif priority == "NORMAL":
-        r1.set(priority,alert)
+        normal_queue.set(priority,alert)
 
 
 def priority_check(alert):
@@ -59,5 +59,8 @@ def producer():
          
 
     
+
+
+producer()
 
 
